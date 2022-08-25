@@ -1,3 +1,3 @@
-const User = require('./User');
-
-module.exports = { User };
+const typeDefs = require ('../schemas/typeDefs');
+const resolvers = require('../schemas/resolvers');
+module.exports = { typeDefs,resolvers };
