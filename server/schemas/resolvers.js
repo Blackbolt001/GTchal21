@@ -6,7 +6,7 @@ const resolvers = {
     Query:{ 
         me: async (parent,args,context => {
             if(context.user) {
-            const.userData = await User.findOne({_id:AudioContext.user_id}).select('-_v -password');
+            const userData = await User.findOne({_id: context.user._id}).select('-_v -password');
             return userData; 
 }
             throw new AuthenticationError('Must be logged in!');
@@ -23,12 +23,12 @@ const resolvers = {
             if(!user) {
                 throw new AuthenticationError('User not found');
             }
-            const correctPass = await user.isCorrectPassword(password);
-            if(!correctPass) {
+            const correctPwd = await user.isCorrectPassword(password);
+            if(!correctPwd) {
                 throw new AuthenticationError('Didnt say the magic word!');
             }
             const token = signToken(user);
-            return {token};
+            return {token,user};
         },
         saveBook: async(parent, {newBook},context) => {
             if(context.user) {
@@ -41,11 +41,11 @@ const resolvers = {
             }
             throw new AuthenticationError('Didnt say the magic word');
         },
-        removeBook: async(parent, {bookId}, context) => {
+        removeBook: async(parent, {args}, context) => {
             if(context.user) {
                 const updateUser = await User.findByIdAndUpdate(
                     {_id:context.user._id},
-                    {$pull:{savedBooks:{bookId}}},
+                    {$pull:{savedBooks:{bookId:args.bookId}}},
                     {new:true}
                 );
                 return updateUser;
