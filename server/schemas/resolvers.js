@@ -1,10 +1,18 @@
 const {AuthenticationError} = require('apollo-server-express');
-const {User,Book} = require('../models');
+const {User,} = require('../models');
 const {signToken} = require ('../utils/auth');
 
 const resolvers = {
-    Query:{ 
-        me: async (parent,args,context => {
+    Query: { 
+       Users: async () => {
+            return User.find();
+        },
+
+        user: async (parent, {userId}) => {
+            return User.findOne({_id: userId});
+        },
+
+        me: async (parent,args,context) => {
             if(context.user) {
                 return User.findOne({_id:context.user._id}).populate("savedBooks");
 }
@@ -12,18 +20,19 @@ const resolvers = {
 },
 },
     Mutation: {
-        addUser: async(parent,args) => {
-            const user = await User.create(args);
+        createUser: async (parent, {name,email,password}) => {
+            const user = await User.create({name,email,password});
             const token = signToken(user);
-            return {token,user};
+            return {token, user};
+
         },
         login: async(parent, {email,password}) => {
             const user = await User.findOne({email});
             if(!user) {
                 throw new AuthenticationError('User not found');
             }
-            const correctPwd = await user.isCorrectPassword(password);
-            if(!correctPwd) {
+            const correctPw = await user.isCorrectPassword(password);
+            if(!correctPw) {
                 throw new AuthenticationError('Didnt say the magic word!');
             }
             const token = signToken(user);
