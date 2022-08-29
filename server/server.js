@@ -15,10 +15,11 @@ const server = new ApolloServer({
   resolvers,
   context: authMiddleware
 });
-server.start().then(() => {
-server.applyMiddleware({ app });
-});
-
+async function startServerWithMiddleware() {
+  await server.start();
+  server.applyMiddleware({app});
+}
+startServerWithMiddleware();
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -26,6 +27,7 @@ app.use(express.json());
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../client/build')));
 }
+
 
 db.once('open', () => {
   app.listen(PORT, () => {

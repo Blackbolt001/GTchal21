@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Jumbotron, Container, Col, Form, Button, Card, CardColumns } from 'react-bootstrap';
 import {useMutation} from '@apollo/client';
+
 import Auth from '../utils/auth';
+import {searchGoogleBooks} from '../utils/API'
 import { SAVE_BOOK } from '../utils/mutations';
 import { saveBookIds, getSavedBookIds } from '../utils/localStorage';
 
@@ -28,9 +30,7 @@ const SearchBooks = () => {
     }
 
     try {
-      const response = await fetch(
-        `https://www.googleapis.com/books/v1/volumesq=${searchInput}`
-      );
+      const response = await searchGoogleBooks(searchInput);
 
       if (!response.ok) {
         throw new Error('something went wrong!');
@@ -66,14 +66,20 @@ const SearchBooks = () => {
     }
 
     try {
-      const {data} = await saveBook({
-        variables: {newbook:{...bookToSave}},
+      await saveBook({
+        variables: {book:{bookToSave}},
       });
-    setSavedBookIds([...savedBookIds,bookToSave.bookId]);
+      window.location.reload();
     }
     catch(err){
       console.error(err);
-    }};
+    }
+    setSavedBookIds([...savedBookIds,bookToSave.bookId]);
+
+  } catch (err) {
+    console.log(err);
+  }
+};
 
     return (
     <>
