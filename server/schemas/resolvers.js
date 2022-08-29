@@ -18,7 +18,7 @@ const resolvers = {
 
 },
         user: async (parent,{username}) => {
-            return User.finfOne({username}).select('-__v -password').populate('books');
+            return User.findOne({username}).select('-__v -password').populate('books');
 }            
 },
     Mutation: {
