@@ -1,52 +1,67 @@
 const {AuthenticationError} = require('apollo-server-express');
-const {User,} = require('../models');
+const {User,Book} = require('../models');
 const {signToken} = require ('../utils/auth');
 
 const resolvers = {
     Query: { 
 
-        User: async (parent,args,context) => {
+        me: async (parent,args,context) => {
             if(context.user) {
-                return User.findOne({_id:context.user._id}).populate("savedBooks");
+                const userData = await User.findOne({_id: context.user_id})
+                .select('-_v -password').populate('books');
+        return userData;
 }
             throw new AuthenticationError('Must be logged in!');
 },
+        users: async() => {
+        return User.find().select('-__v -password').populate('books');
+
+},
+        user: async (parent,{username}) => {
+            return User.finfOne({username}).select('-__v -password').populate('books');
+}            
 },
     Mutation: {
-        createUser: async (parent, {name,email,password}) => {
-            const user = await User.create({name,email,password});
+        addUser: async (parent,args) => {
+            const user = await User.create(args);
             const token = signToken(user);
             return {token, user};
 
-        },
-        login: async( parent, {email,password}) => {
-            const user = await User.findOne({email});
-            if(!user) {
-                throw new AuthenticationError('User not found');
-            }
-            const correctPw = await user.isCorrectPassword(password);
+},
+    login: async( parent, {email,password}) => {
+        const user = await User.findOne({email});
+
+        if(!user) {
+            throw new AuthenticationError('User not found');
+}
+
+        const correctPw = await user.isCorrectPassword(password);
+
             if(!correctPw) {
                 throw new AuthenticationError('Didnt say the magic word!');
-            }
-            const token = signToken(user);
+}
+
+        const token = signToken(user);
             return {token,user};
-        },
-        saveBook: async(parent, {newBook},context) => {
+},
+
+    saveBook: async(parent, {bookData},context) => {
             if(context.user) {
                 const updateUser = await User.findByIdAndUpdate(
                     {_id:context.user._id},
-                    {$push:{savedBooks:newBook}},
+                    {$addtoSet:{savedBooks:bookData}},
                     {new:true}
                 );
                 return updateUser;
-            }
+}
             throw new AuthenticationError('Didnt say the magic word');
-        },
-        deleteBook: async(parent, {args}, context) => {
+},
+
+        deleteBook: async(parent, {bookId}, context) => {
             if(context.user) {
                 const updateUser = await User.findByIdAndUpdate(
                     {_id:context.user._id},
-                    {$pull:{savedBooks:{bookId:args.bookId}}},
+                    {$pull:{savedBooks:{bookId}}},
                     {new:true}
                 );
                 return updateUser;
