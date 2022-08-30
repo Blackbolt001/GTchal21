@@ -24,10 +24,9 @@ const handleDeleteBook = async (bookId) => {
         return false;
 }
         try { 
- await removeBook({
-     variables:{bookId}
+          const {data} = await removeBook({
+     variables:{bookId},
   });
-  window.location.reload();
 
           removeBookId(bookId);
 }
