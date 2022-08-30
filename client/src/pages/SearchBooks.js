@@ -65,7 +65,7 @@ const SearchBooks = () => {
       return false;
     }
 
-    try {
+    try { try {
       await saveBook({
         variables: {book:{bookToSave}},
       });
