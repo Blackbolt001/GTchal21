@@ -17,4 +17,4 @@ router.route('/me').get(authMiddleware, getSingleUser);
 
 router.route('/books/:bookId').delete(authMiddleware, deleteBook);
 
-odule.exports = router;
+module.exports = router;

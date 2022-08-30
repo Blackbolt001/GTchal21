@@ -1,7 +1,7 @@
 {
   "name": "googlebooks-app",
   "version": "1.0.0",
-  "description": "21. MERN Challenge: Book Search Engine",
+  "description": "",
   "main": "server/server.js",
   "scripts": {
     "start": "node server/server.js",
@@ -11,8 +11,9 @@
   },
   "keywords": [],
   "author": "",
-  "license": "MIT",
+  "license": "ISC",
   "devDependencies": {
     "concurrently": "^5.1.0"
+
   }
 }
