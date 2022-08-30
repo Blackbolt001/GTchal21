@@ -58,3 +58,8 @@ THEN I am logged out of the site and presented with a menu with the options Sear
 On the technical architecture, the application features the use of **React** to handle a responsive, stateful user interface; **GraphQL** for data query and manipulation through APIs; **Apollo Server**, a GraphQL Server that can use data from disparate sources; **Apollo Client**, a state management library to manage GraphQL operations; **Mongoose** and **MongoDB** to define the logical structure of the database and provide a means to manage the underlying data structures; **HTML**, **Bootstrap**, and **Javascript** to enable the input and client-side validation of the application data; **Express.Js** for route handling and file serving, and **Node.Js** for Javascript running.
 
 The application uses three schemas hosted on the **NoSQL** database (**MongoDb**), which are accessed through **APIs** built on **GraphQL**: _User_, _Book_, and _Auth_ as shown below:
+
+![Screenshot 2022-08-29 231807](https://user-images.githubusercontent.com/105749663/187343900-efa8cea6-8bb2-42dd-b683-b7807106d4df.png)![Screenshot 2022-08-29 232023](https://user-images.githubusercontent.com/105749663/187343906-b060b2dd-858d-46aa-9071-694d01d99240.png)
+
+![Screenshot 2022-08-29 232228](https://user-images.githubusercontent.com/105749663/187343910-6750a719-ed28-46f1-8673-5a855a228077.png)
+
